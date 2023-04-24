@@ -17,24 +17,24 @@ class RSA:
             self.p = libnum.generate_prime(prime_len, k=25)
             self.q = libnum.generate_prime(prime_len, k=25)
         self.module = self.p * self.q
-        self.phi = self.__euler_func__(self.p, self.q)
-        self.public_key = self.__create_public_key__()
-        self.private_key = self.__create_private_key__()
+        self.phi = self.__euler_func(self.p, self.q)
+        self.public_key = self.__create_public_key()
+        self.private_key = self.__create_private_key()
 
-    def __create_public_key__(self):
+    def __create_public_key(self):
         # Публичная экспонента - число e, взаимно простое с значением ф-и
         # Эйлера от сгенерированного модуля n, такое что 1 < e < f(n)
         public_exponent = libnum.generate_prime(len(str(self.phi)), k=25)
         return dict(exponent=public_exponent, module=self.module)
 
-    def __create_private_key__(self):
+    def __create_private_key(self):
         # Приватная экспонента - число d, обратное к публичной экспоненте e в
         # кольце вычетов по модулю f(n), где n - сгенерированный модуль,
         # f(n) - значение функции Эйлера от модуля
         private_exponent = pow(self.public_key['exponent'], -1, self.phi)
         return dict(exponent=private_exponent, module=self.module)
 
-    def __euler_func__(self, num1, num2):
+    def __euler_func(self, num1, num2):
         # Используем свойство ф-и Эйлера: значение ф-и от взаимно простых
         # чисел есть произведение значений ф-и от каждого из чисел,
         # а значение ф-и f от простого числа p: f(p) = p - 1
